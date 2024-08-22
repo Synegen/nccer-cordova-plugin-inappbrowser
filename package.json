@@ -1,10 +1,10 @@
 {
-  "name": "cordova-plugin-inappbrowser",
+  "name": "nccer-cordova-plugin-inappbrowser",
   "version": "6.0.0",
-  "description": "Cordova InAppBrowser Plugin",
+  "description": "NCCER Cordova InAppBrowser Plugin",
   "types": "./types/index.d.ts",
   "cordova": {
-    "id": "cordova-plugin-inappbrowser",
+    "id": "nccer-cordova-plugin-inappbrowser",
     "platforms": [
       "android",
       "browser",
