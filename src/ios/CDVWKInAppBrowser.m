@@ -689,7 +689,9 @@ BOOL isExiting = FALSE;
     
     if (@available(iOS 13.0, *)) {
         NSString *contentMode = [self settingForKey:@"PreferredContentMode"];
-        if ([contentMode isEqual: @"mobile"]) {
+        if (_browserOptions.forcedesktopmode) {
+            configuration.defaultWebpagePreferences.preferredContentMode = WKContentModeDesktop;
+        } else if ([contentMode isEqual: @"mobile"]) {
             configuration.defaultWebpagePreferences.preferredContentMode = WKContentModeMobile;
         } else if ([contentMode  isEqual: @"desktop"]) {
             configuration.defaultWebpagePreferences.preferredContentMode = WKContentModeDesktop;

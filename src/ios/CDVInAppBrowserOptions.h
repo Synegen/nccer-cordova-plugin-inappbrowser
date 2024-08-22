@@ -46,6 +46,9 @@
 @property (nonatomic, assign) BOOL disallowoverscroll;
 @property (nonatomic, copy) NSString* beforeload;
 
+// NOTE: WJK: SYNEGEN CUSTOM
+@property (nonatomic, assign) BOOL forcedesktopmode;
+
 + (CDVInAppBrowserOptions*)parseOptions:(NSString*)options;
 
 @end

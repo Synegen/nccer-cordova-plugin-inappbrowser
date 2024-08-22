@@ -45,6 +45,9 @@
         self.toolbarcolor = nil;
         self.toolbartranslucent = YES;
         self.beforeload = @"";
+
+        // NOTE: WJK: SYNEGEN CUSTOM
+        self.forcedesktopmode = NO;
     }
 
     return self;
