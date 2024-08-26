@@ -99,6 +99,7 @@ instance, or the system browser.
     All platforms support:
 
     - __location__: Set to `yes` or `no` to turn the `InAppBrowser`'s location bar on or off.
+    - __forcedesktopmode__: Set to `yes` to force use of desktop mode instead of letting the device determine the mode (defaults to `no`).
 
     Android supports these additional options:
 

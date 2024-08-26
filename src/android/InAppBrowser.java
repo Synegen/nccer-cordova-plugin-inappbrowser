@@ -118,6 +118,7 @@ public class InAppBrowser extends CordovaPlugin {
     private static final String FOOTER_COLOR = "footercolor";
     private static final String BEFORELOAD = "beforeload";
     private static final String FULLSCREEN = "fullscreen";
+    private static final String FORCEDESKTOPMODE = "forcedesktopmode";
 
     private static final int TOOLBAR_HEIGHT = 48;
 
@@ -1001,7 +1002,12 @@ public class InAppBrowser extends CordovaPlugin {
                     settings.setUserAgentString(settings.getUserAgentString() + " " + appendUserAgent);
                 }
 
-                settings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36");
+                String forcedesktopmode = features.get(FORCEDESKTOPMODE);
+                if (forcedesktopmode != null) {
+                    if (forcedesktopmode.equals("yes")) {
+                        settings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36");
+                    }
+                }
 
                 //Toggle whether this is enabled or not!
                 Bundle appSettings = cordova.getActivity().getIntent().getExtras();
