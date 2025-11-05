@@ -27,6 +27,7 @@ import org.json.JSONException;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Message;
+import android.view.View;
 import android.webkit.JsPromptResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -45,6 +46,30 @@ public class InAppChromeClient extends WebChromeClient {
     public InAppChromeClient(CordovaWebView webView) {
         super();
         this.webView = webView;
+    }
+
+    /**
+     * Render web content in `view`.
+     *
+     * Both this method and {@link #onHideCustomView()} are required for
+     * rendering web content in full screen.
+     *
+     * @see <a href="https://developer.android.com/reference/android/webkit/WebChromeClient#onShowCustomView(android.view.View,%20android.webkit.WebChromeClient.CustomViewCallback)">onShowCustomView() docs</a>
+     */
+    @Override
+    public void onShowCustomView(View view, CustomViewCallback callback) {
+        callback.onCustomViewHidden();
+        super.onShowCustomView(view, callback);
+    }
+
+    /**
+     * Render web content in the original Web View again.
+     *
+     * Do not remove this method--@see #onShowCustomView(View, CustomViewCallback).
+     */
+    @Override
+    public void onHideCustomView() {
+        super.onHideCustomView();
     }
     
     public void onPermissionRequest(final PermissionRequest request) {
