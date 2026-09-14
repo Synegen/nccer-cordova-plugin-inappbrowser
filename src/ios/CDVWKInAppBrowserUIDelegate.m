@@ -18,6 +18,7 @@
  */
 
 #import "CDVWKInAppBrowserUIDelegate.h"
+#import "CDVWKInAppBrowser.h"
 
 @implementation CDVWKInAppBrowserUIDelegate
 
@@ -124,4 +125,17 @@
     _viewController = viewController;
 }
 
+- (WKWebView *)webView:(WKWebView *)webView
+createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
+forNavigationAction:(WKNavigationAction *)navigationAction
+windowFeatures:(WKWindowFeatures *)windowFeatures
+{
+    CDVWKInAppBrowserViewController *viewController =
+        (CDVWKInAppBrowserViewController *)[self getViewController];
+
+    return [viewController
+        createChildWebViewWithConfiguration:configuration
+        navigationAction:navigationAction
+        windowFeatures:windowFeatures];
+}
 @end

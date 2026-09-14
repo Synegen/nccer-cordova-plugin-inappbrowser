@@ -504,19 +504,6 @@ static CDVWKInAppBrowser* instance = nil;
             [theWebView loadRequest:navigationAction.request];
             decisionHandler(WKNavigationActionPolicyCancel);
         }else{
-
-            // --- Synegen patch: force Integrity Advocate subframe navigations to top-level ---
-            // Avoids WKWebView's SOAuthorizationCoordinator hijacking the subframe
-            // navigation (SubFrameSOAuthorizationSession) and hanging indefinitely.
-            NSString *urlString = navigationAction.request.URL.absoluteString;
-            if (!navigationAction.targetFrame.isMainFrame &&
-                [urlString rangeOfString:@"app.integrityadvocateserver.com" options:NSCaseInsensitiveSearch].location != NSNotFound) {
-                [theWebView loadRequest:navigationAction.request];
-                decisionHandler(WKNavigationActionPolicyCancel);
-                return;
-            }
-            // --- end Synegen patch ---
-
             decisionHandler(WKNavigationActionPolicyAllow);
         }
     }else{
@@ -1117,6 +1104,29 @@ BOOL isExiting = FALSE;
     [scanner setScanLocation:1]; // bypass '#' character
     [scanner scanHexInt:&rgbValue];
     return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
+}
+
+- (WKWebView *)createChildWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
+                                  navigationAction:(WKNavigationAction *)navigationAction
+                                      windowFeatures:(WKWindowFeatures *)windowFeatures
+{
+    CGRect frame = self.webView.frame;
+
+    self.childWebView = [[WKWebView alloc] initWithFrame:frame
+                                           configuration:configuration];
+
+    self.childWebView.autoresizingMask =
+        UIViewAutoresizingFlexibleWidth |
+        UIViewAutoresizingFlexibleHeight;
+
+    self.childWebView.navigationDelegate = self;
+    self.childWebView.UIDelegate = self.webViewUIDelegate;
+
+    [self.view addSubview:self.childWebView];
+
+    [self.webView removeFromSuperview];
+
+    return self.childWebView;
 }
 
 #pragma mark WKNavigationDelegate

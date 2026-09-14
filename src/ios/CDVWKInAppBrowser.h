@@ -68,6 +68,7 @@
 @property (nonatomic, weak) id <CDVScreenOrientationDelegate> orientationDelegate;
 @property (nonatomic, weak) CDVWKInAppBrowser* navigationDelegate;
 @property (nonatomic) NSURL* currentURL;
+@property (nonatomic, strong) WKWebView *childWebView;
 
 - (void)close;
 - (void)navigateTo:(NSURL*)url;
@@ -76,5 +77,7 @@
 - (void)setCloseButtonTitle:(NSString*)title : (NSString*) colorString : (int) buttonIndex;
 
 - (id)initWithBrowserOptions: (CDVInAppBrowserOptions*) browserOptions andSettings:(NSDictionary*) settings;
-
+- (WKWebView *)createChildWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
+                                  navigationAction:(WKNavigationAction *)navigationAction
+                                      windowFeatures:(WKWindowFeatures *)windowFeatures;
 @end
