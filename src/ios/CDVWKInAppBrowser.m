@@ -1053,10 +1053,49 @@ BOOL isExiting = FALSE;
     }
 }
 
+// - (void)goBack:(id)sender
+// {
+//     [self.webView goBack];
+// }
 - (void)goBack:(id)sender
 {
-    [self.webView goBack];
+    if (self.childWebView) {
+//         [self setNavigationButtonsHidden:NO];
+        if (self.childWebView.canGoBack) {
+            [self.childWebView goBack];
+        } else {
+            [self closeChildWebView];
+        }
+        return;
+    }
+
+    if (self.webView.canGoBack) {
+        [self.webView goBack];
+    }
 }
+
+- (void)closeChildWebView
+{
+    if (!self.childWebView) {
+        return;
+    }
+
+    // Stop navigation and detach delegates.
+    [self.childWebView stopLoading];
+    self.childWebView.navigationDelegate = nil;
+    self.childWebView.UIDelegate = nil;
+
+    // Remove the child from the view hierarchy.
+    [self.childWebView removeFromSuperview];
+
+    self.childWebView = nil;
+
+    // Restore the original parent web view.
+    if (self.webView.superview == nil) {
+        [self.view addSubview:self.webView];
+    }
+}
+
 
 - (void)goForward:(id)sender
 {
@@ -1136,7 +1175,11 @@ BOOL isExiting = FALSE;
     // loading url, start spinner, update back/forward
 
     self.addressLabel.text = NSLocalizedString(@"Loading...", nil);
-    self.backButton.enabled = theWebView.canGoBack;
+    self.forwardButton.hidden = YES;
+
+//     self.backButton.enabled = theWebView.canGoBack;
+    self.backButton.enabled =
+        self.childWebView != nil || theWebView.canGoBack;
     self.forwardButton.enabled = theWebView.canGoForward;
 
     NSLog(_browserOptions.hidespinner ? @"Yes" : @"No");
@@ -1163,13 +1206,20 @@ BOOL isExiting = FALSE;
 
 - (void)webView:(WKWebView *)theWebView didFinishNavigation:(WKNavigation *)navigation
 {
+    // add navigation buttons for nested webviews
+//     if(self.childWebView){
+//         [self setNavigationButtonsHidden:NO];
+//     }
     // update url, stop spinner, update back/forward
 
     self.addressLabel.text = [self.currentURL absoluteString];
-    self.backButton.enabled = theWebView.canGoBack;
+//     self.backButton.enabled = theWebView.canGoBack;
+    self.backButton.enabled =
+        self.childWebView != nil || theWebView.canGoBack;
     self.forwardButton.enabled = theWebView.canGoForward;
     theWebView.scrollView.contentInset = UIEdgeInsetsZero;
 
+//     [self setNavigationButtonsHidden:NO];
     [self.spinner stopAnimating];
 
     [self.navigationDelegate didFinishNavigation:theWebView];
@@ -1179,7 +1229,9 @@ BOOL isExiting = FALSE;
     // log fail message, stop spinner, update back/forward
     NSLog(@"webView:%@ - %ld: %@", delegateName, (long)error.code, [error localizedDescription]);
 
-    self.backButton.enabled = theWebView.canGoBack;
+//     self.backButton.enabled = theWebView.canGoBack;
+    self.backButton.enabled =
+        self.childWebView != nil || self.webView.canGoBack;
     self.forwardButton.enabled = theWebView.canGoForward;
     [self.spinner stopAnimating];
 
