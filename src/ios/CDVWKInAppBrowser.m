@@ -1090,7 +1090,7 @@ BOOL isExiting = FALSE;
 
     self.childWebView = nil;
 
-    // Restore the original parent web view.
+    // Restore the parent web view.
     if (self.webView.superview == nil) {
         [self.view addSubview:self.webView];
     }
